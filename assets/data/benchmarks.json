@@ -1,0 +1,604 @@
+{
+    "meta": {
+        "prompt": "abstract moody editorial photoshoot, 3/4 portrait, mysterious woman, grey eyes, wearing an soft gradient linen inflated balaclava that glows softly from within, illuminating their stoic face, the balaclava creates huge inflated bubbles of fabric, loose fit white linen shirt, set against a pristine pure soft gradient backdrop in an intimate studio setting, radiating an aura of mystique and quiet introspection",
+        "resolution_px": [
+            1024,
+            1024
+        ],
+        "steps": 7,
+        "denoise": 0.82
+    },
+    "devices": [
+        {
+            "name": "RTX 4070 Ti",
+            "gpu": "NVIDIA GeForce RTX 4070 Ti",
+            "vram_gb": 12,
+            "system_ram_gb": 64,
+            "system_ram_speed": "4800 MT/s",
+            "cpu": "Intel Core i5-13600K"
+        },
+        {
+            "name": "RTX 3090 Ti",
+            "gpu": "NVIDIA GeForce RTX 3090 Ti",
+            "vram_gb": 24,
+            "system_ram_gb": 64,
+            "system_ram_speed": "3600 MHz",
+            "cpu": "AMD Ryzen 9 5900X"
+        },
+        {
+            "name": "Mac Mini M4 Pro",
+            "gpu": "Apple M4 Pro (integrated)",
+            "vram_gb": 24,
+            "system_ram_gb": 24,
+            "system_ram_type": "Unified memory"
+        },
+        {
+            "name": "RTX 3080 Laptop",
+            "gpu": "NVIDIA GeForce RTX 3080 (Laptop)",
+            "vram_gb": 8,
+            "system_ram_gb": 16,
+            "system_ram_speed": "3200 MT/S",
+            "cpu": "AMD Ryzen 9 5900HX"
+        }
+    ],
+    "benchmarks": [
+        {
+            "workflow": "AIO FP8",
+            "original_workflow_label": "AIO FP8 [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.11,
+                "total_seconds": 21.11
+            },
+            "run2": {
+                "s_per_it": 1.01,
+                "total_seconds": 7.66
+            }
+        },
+        {
+            "workflow": "BF16 Qwen3 + VAE",
+            "original_workflow_label": "BF16 QWEN3 VAE [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.1,
+                "total_seconds": 29.98
+            },
+            "run2": {
+                "s_per_it": 1.01,
+                "total_seconds": 9.14
+            }
+        },
+        {
+            "workflow": "FP8 Qwen3 + VAE",
+            "original_workflow_label": "FP8 QWEN3 VAE [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.17,
+                "total_seconds": 30
+            },
+            "run2": {
+                "s_per_it": 1.06,
+                "total_seconds": 8.1
+            }
+        },
+        {
+            "workflow": "FP8 GGUF + Qwen Q5",
+            "original_workflow_label": "FP8 GGUF QWEN Q5_K_XL [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.16,
+                "total_seconds": 19.2
+            },
+            "run2": {
+                "s_per_it": 1.04,
+                "total_seconds": 7.98
+            }
+        },
+        {
+            "workflow": "BF16 GGUF + Qwen Q5",
+            "original_workflow_label": "BF16 GGUF QWEN Q5_K_XL [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.11,
+                "total_seconds": 28.46
+            },
+            "run2": {
+                "s_per_it": 1.01,
+                "total_seconds": 8.97
+            }
+        },
+        {
+            "workflow": "ZIT Q3 + Qwen Q2",
+            "original_workflow_label": "ZIT Q3_K_S + QWEN3_Q2_K_XL [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.53,
+                "total_seconds": 31.09
+            },
+            "run2": {
+                "s_per_it": 1.36,
+                "total_seconds": 9.96
+            }
+        },
+        {
+            "workflow": "ZIT Q4 + Qwen Q2",
+            "original_workflow_label": "ZIT Q4_K_M + QWEN3_Q2_K_XL [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.39,
+                "total_seconds": 29.6
+            },
+            "run2": {
+                "s_per_it": 1.26,
+                "total_seconds": 9.24
+            }
+        },
+        {
+            "workflow": "ZIT Q5 + Qwen Q2",
+            "original_workflow_label": "ZIT Q5_K_M + QWEN3_Q2_K_XL [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.43,
+                "total_seconds": 39.45
+            },
+            "run2": {
+                "s_per_it": 1.32,
+                "total_seconds": 9.67
+            }
+        },
+        {
+            "workflow": "ZIT Q3 + Qwen Q5",
+            "original_workflow_label": "ZIT Q3_K_S + QWEN3_Q5_K_XL [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.48,
+                "total_seconds": 21.79
+            },
+            "run2": {
+                "s_per_it": 1.4,
+                "total_seconds": 10.22
+            }
+        },
+        {
+            "workflow": "ZIT Q4 + Qwen Q5",
+            "original_workflow_label": "ZIT Q4_K_M + QWEN3_Q5_K_XL [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.37,
+                "total_seconds": 19.98
+            },
+            "run2": {
+                "s_per_it": 1.25,
+                "total_seconds": 9.17
+            }
+        },
+        {
+            "workflow": "ZIT Q5 + Qwen Q5",
+            "original_workflow_label": "ZIT Q5_K_M + QWEN3_Q5_K_XL [4070ti]",
+            "device": "RTX 4070 Ti",
+            "run1": {
+                "s_per_it": 1.4,
+                "total_seconds": 20.9
+            },
+            "run2": {
+                "s_per_it": 1.32,
+                "total_seconds": 9.69
+            }
+        },
+        {
+            "workflow": "AIO FP8",
+            "original_workflow_label": "FP8 AIO [Mac Mini M4 Pro]",
+            "device": "Mac Mini M4 Pro",
+            "run1": {
+                "s_per_it": 22.39,
+                "total_seconds": 193.55
+            },
+            "run2": {
+                "s_per_it": 17.48,
+                "total_seconds": 128.38
+            }
+        },
+        {
+            "workflow": "BF16 Qwen3 + VAE",
+            "original_workflow_label": "BF16 QWEN3 VAE [Mac Mini M4 Pro]",
+            "device": "Mac Mini M4 Pro",
+            "run1": {
+                "s_per_it": 22.17,
+                "total_seconds": 209.9
+            },
+            "run2": {
+                "s_per_it": 25.67,
+                "total_seconds": 187.78
+            }
+        },
+        {
+            "workflow": "BF16 GGUF + Qwen Q5",
+            "original_workflow_label": "BF16 GGUF QWEN Q5_K_XL [Mac Mini M4 Pro]",
+            "device": "Mac Mini M4 Pro",
+            "run1": {
+                "s_per_it": 19.68,
+                "total_seconds": 183.78
+            },
+            "run2": {
+                "s_per_it": 18.87,
+                "total_seconds": 137.54
+            }
+        },
+        {
+            "workflow": "ZIT Q3 + Qwen Q2",
+            "original_workflow_label": "ZIT Q3_K_S + QWEN3_Q2_K_XL [Mac Mini M4 Pro]",
+            "device": "Mac Mini M4 Pro",
+            "run1": {
+                "s_per_it": 15.03,
+                "total_seconds": 121.23
+            },
+            "run2": {
+                "s_per_it": 14.95,
+                "total_seconds": 107.12
+            }
+        },
+        {
+            "workflow": "ZIT Q3 + Qwen Q5",
+            "original_workflow_label": "ZIT Q3_K_S + QWEN3_Q5_K_XL [Mac Mini M4 Pro]",
+            "device": "Mac Mini M4 Pro",
+            "run1": {
+                "s_per_it": 15.03,
+                "total_seconds": 118.28
+            },
+            "run2": {
+                "s_per_it": 14.94,
+                "total_seconds": 107.02
+            }
+        },
+        {
+            "workflow": "ZIT Q4 + Qwen Q2",
+            "original_workflow_label": "ZIT Q4_K_M + QWEN 3_Q2_K_XL [Mac Mini M4 Pro]",
+            "device": "Mac Mini M4 Pro",
+            "run1": {
+                "s_per_it": 14.61,
+                "total_seconds": 119.1
+            },
+            "run2": {
+                "s_per_it": 14.52,
+                "total_seconds": 104.14
+            }
+        },
+        {
+            "workflow": "ZIT Q4 + Qwen Q5",
+            "original_workflow_label": "ZIT Q4_K_M + QWEN 3_Q5_K_XL [Mac Mini M4 Pro]",
+            "device": "Mac Mini M4 Pro",
+            "run1": {
+                "s_per_it": 14.63,
+                "total_seconds": 116.26
+            },
+            "run2": {
+                "s_per_it": 14.54,
+                "total_seconds": 104.26
+            }
+        },
+        {
+            "workflow": "ZIT Q5 + Qwen Q2",
+            "original_workflow_label": "ZIT Q5_K_M + QWEN 3_Q2_K_XL [Mac Mini M4 Pro]",
+            "device": "Mac Mini M4 Pro",
+            "run1": {
+                "s_per_it": 15.17,
+                "total_seconds": 123.48
+            },
+            "run2": {
+                "s_per_it": 15.05,
+                "total_seconds": 107.8
+            }
+        },
+        {
+            "workflow": "ZIT Q5 + Qwen Q5",
+            "original_workflow_label": "ZIT Q5_K_M + QWEN 3_Q5_K_XL [Mac Mini M4 Pro]",
+            "device": "Mac Mini M4 Pro",
+            "run1": {
+                "s_per_it": 15.15,
+                "total_seconds": 120.25
+            },
+            "run2": {
+                "s_per_it": 15.05,
+                "total_seconds": 107.8
+            }
+        },
+        {
+            "workflow": "AIO FP8",
+            "original_workflow_label": "FP8 AIO [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.84,
+                "total_seconds": 23.17
+            },
+            "run2": {
+                "s_per_it": 1.02,
+                "total_seconds": 7.61
+            }
+        },
+        {
+            "workflow": "BF16 Qwen3 + VAE",
+            "original_workflow_label": "BF16 QWEN3 VAE [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.1,
+                "total_seconds": 27.89
+            },
+            "run2": {
+                "s_per_it": 0.8928571428571428,
+                "total_seconds": 6.74
+            }
+        },
+        {
+            "workflow": "BF16 GGUF + Qwen Q5",
+            "original_workflow_label": "BF16 GGUF QWEN Q5_K_XL [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.1,
+                "total_seconds": 26.88
+            },
+            "run2": {
+                "s_per_it": 0.9174311926605504,
+                "total_seconds": 6.89
+            }
+        },
+        {
+            "workflow": "FP8 Qwen3 + VAE",
+            "original_workflow_label": "FP8 QWEN3 VAE [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.23,
+                "total_seconds": 20.05
+            },
+            "run2": {
+                "s_per_it": 0.9803921568627451,
+                "total_seconds": 7.28
+            }
+        },
+        {
+            "workflow": "FP8 GGUF + Qwen Q5",
+            "original_workflow_label": "FP8 QWEN Q5_K_XL [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.2,
+                "total_seconds": 21.84
+            },
+            "run2": {
+                "s_per_it": 0.9803921568627451,
+                "total_seconds": 7.26
+            }
+        },
+        {
+            "workflow": "ZIT Q3 + Qwen Q2",
+            "original_workflow_label": "ZIT Q3_K_S + QWEN3 Q2_K_XL [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.41,
+                "total_seconds": 34.71
+            },
+            "run2": {
+                "s_per_it": 1.26,
+                "total_seconds": 9.26
+            }
+        },
+        {
+            "workflow": "ZIT Q3 + Qwen Q5",
+            "original_workflow_label": "ZIT Q3_K_S + QWEN 3_Q5_K_XL [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.45,
+                "total_seconds": 22.42
+            },
+            "run2": {
+                "s_per_it": 1.23,
+                "total_seconds": 8.99
+            }
+        },
+        {
+            "workflow": "ZIT Q4 + Qwen Q2",
+            "original_workflow_label": "ZIT Q4_K_M + QWEN 3_Q2_K_XL [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.38,
+                "total_seconds": 34.73
+            },
+            "run2": {
+                "s_per_it": 1.13,
+                "total_seconds": 8.34
+            }
+        },
+        {
+            "workflow": "ZIT Q4 + Qwen Q5",
+            "original_workflow_label": "ZIT Q4_K_M + QWEN 3_Q5_K_XL [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.46,
+                "total_seconds": 23.89
+            },
+            "run2": {
+                "s_per_it": 1.14,
+                "total_seconds": 8.37
+            }
+        },
+        {
+            "workflow": "ZIT Q5 + Qwen Q2",
+            "original_workflow_label": "ZIT Q5_K_M + QWEN Q2_K_XL [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.35,
+                "total_seconds": 36.86
+            },
+            "run2": {
+                "s_per_it": 1.15,
+                "total_seconds": 8.47
+            }
+        },
+        {
+            "workflow": "ZIT Q5 + Qwen Q5",
+            "original_workflow_label": "ZIT Q5_K_M + QWEN Q5_K_XL [3090Ti]",
+            "device": "RTX 3090 Ti",
+            "run1": {
+                "s_per_it": 1.5,
+                "total_seconds": 23.42
+            },
+            "run2": {
+                "s_per_it": 1.13,
+                "total_seconds": 8.29
+            }
+        },
+        {
+            "workflow": "AIO FP8",
+            "original_workflow_label": "AIO FP8 [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.31,
+                "total_seconds": 90
+            },
+            "run2": {
+                "s_per_it": 1.99,
+                "total_seconds": 17.77
+            }
+        },
+        {
+            "workflow": "BF16 Qwen3 + VAE",
+            "original_workflow_label": "BF16 QWEN3 VAE [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.57,
+                "total_seconds": 232.64
+            },
+            "run2": {
+                "s_per_it": 2.27,
+                "total_seconds": 34.41
+            }
+        },
+        {
+            "workflow": "BF16 GGUF + Qwen Q5",
+            "original_workflow_label": "BF16 GGUF QWEN Q5_K_XL [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.59,
+                "total_seconds": 142.27
+            },
+            "run2": {
+                "s_per_it": 2.28,
+                "total_seconds": 27.45
+            }
+        },
+        {
+            "workflow": "FP8 Qwen3 + VAE",
+            "original_workflow_label": "FP8 QWEN3 VAE [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.3,
+                "total_seconds": 75.11
+            },
+            "run2": {
+                "s_per_it": 2.04,
+                "total_seconds": 17.55
+            }
+        },
+        {
+            "workflow": "FP8 GGUF + Qwen Q5",
+            "original_workflow_label": "FP8 GGUF QWEN Q5_K_XL [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.54,
+                "total_seconds": 58.62
+            },
+            "run2": {
+                "s_per_it": 2.05,
+                "total_seconds": 17.65
+            }
+        },
+        {
+            "workflow": "ZIT Q3 + Qwen Q2",
+            "original_workflow_label": "ZIT Q3_K_S + QWEN3_Q2_K_XL [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.86,
+                "total_seconds": 63.26
+            },
+            "run2": {
+                "s_per_it": 2.61,
+                "total_seconds": 20.66
+            }
+        },
+        {
+            "workflow": "ZIT Q3 + Qwen Q5",
+            "original_workflow_label": "ZIT Q3_K_S + QWEN3_Q5_K_XL [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.78,
+                "total_seconds": 42.44
+            },
+            "run2": {
+                "s_per_it": 2.57,
+                "total_seconds": 20.13
+            }
+        },
+        {
+            "workflow": "ZIT Q4 + Qwen Q2",
+            "original_workflow_label": "ZIT Q4_K_M + QWEN3_Q2_K_XL [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.63,
+                "total_seconds": 53.06
+            },
+            "run2": {
+                "s_per_it": 2.39,
+                "total_seconds": 19.72
+            }
+        },
+        {
+            "workflow": "ZIT Q4 + Qwen Q5",
+            "original_workflow_label": "ZIT Q4_K_M + QWEN3_Q5_K_XL [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.7,
+                "total_seconds": 46.86
+            },
+            "run2": {
+                "s_per_it": 2.39,
+                "total_seconds": 19.72
+            }
+        },
+        {
+            "workflow": "ZIT Q5 + Qwen Q2",
+            "original_workflow_label": "ZIT Q5_K_M + QWEN3_Q2_K_XL [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.74,
+                "total_seconds": 56.5
+            },
+            "run2": {
+                "s_per_it": 2.46,
+                "total_seconds": 20.51
+            }
+        },
+        {
+            "workflow": "ZIT Q4 + Qwen Q5",
+            "original_workflow_label": "ZIT Q5_K_M + QWEN3_Q5_K_XL [3080 LAPTOP]",
+            "device": "RTX 3080 Laptop",
+            "run1": {
+                "s_per_it": 2.74,
+                "total_seconds": 44.57
+            },
+            "run2": {
+                "s_per_it": 2.47,
+                "total_seconds": 20.54
+            }
+        }
+    ],
+    "unsupported": [
+        {
+            "workflow": "FP8 (generic)",
+            "device": "Mac Mini M4 Pro",
+            "reason": "FP8 does not apply to M4 Pro/MPS"
+        },
+        {
+            "workflow": "FP8 Qwen (generic)",
+            "device": "Mac Mini M4 Pro",
+            "reason": "FP8 Qwen does not apply to M4 Pro/MPS"
+        }
+    ]
+}

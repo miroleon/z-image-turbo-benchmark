@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Z-Image Turbo Model and Speed Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description"
+        content="Interactive benchmark comparing Z-Image Turbo model variants across multiple GPUs and Apple Silicon. Visual outputs + per-device load and generation times." />
+
+    <link rel="stylesheet" href="assets/icons/style.css" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="brand-block">
+                <div class="brand">Z-Image Turbo Model and Speed Comparison</div>
+                <div class="subtitle">
+                    Compare different Z-Image Turbo models across seeds, devices, and configurations. The benchmarks
+                    currently feature an Apple Silicon <b>M4 Pro</b>, a <b>3080</b> laptop GPU, <b>3090 Ti</b>, and
+                    <b>4070 Ti</b> desktop GPUs (4090 to be added).
+                </div>
+                <div class="meta">
+                    <span>1024×1024</span>
+                    <span>7 steps</span>
+                    <span>Denoise 0.82</span>
+                    <span>Seeds: 4, 5, 6</span>
+                </div>
+            </div>
+
+            <div class="header-controls">
+                <div id="header-count" class="header-count">
+                    Loading models…
+                </div>
+                <label class="theme-toggle">
+                    <select id="theme-select">
+                        <option value="auto" selected>theme</option>
+                        <option value="light">light</option>
+                        <option value="dark">dark</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+
+        <!-- Prompt card -->
+        <section class="card prompt-card">
+            <h3 class="card-title"><i class="ph ph-textalign-left"></i> Prompt & Setup</h3>
+
+            <p class="prompt-body">
+                <strong>Prompt:</strong>
+                abstract moody editorial photoshoot, 3/4 portrait, mysterious woman, grey eyes, wearing an soft gradient
+                linen
+                inflated balaclava that glows softly from within, illuminating their stoic face, the balaclava creates
+                huge
+                inflated bubbles of fabric, loose fit white linen shirt, set against a pristine pure soft gradient
+                backdrop in
+                an intimate studio setting, radiating an aura of mystique and quiet introspection.
+            </p>
+
+            <ul class="prompt-details">
+                <li><strong>Resolution:</strong> 1024×1024</li>
+                <li><strong>Steps:</strong> 7</li>
+                <li><strong>Denoise:</strong> 0.82</li>
+                <li><strong>Seeds:</strong> 4 (01), 5 (02), 6 (03)</li>
+            </ul>
+
+            <p><b>System Specifications</b></p>
+            <ul class="prompt-details">
+                <li><b>Mac Mini M4 Pro</b></li>
+                <ul>
+                    <li>24GB Unified RAM</li>
+                </ul>
+                <br>
+                <li><b>3080 Ti Laptop GPU (RAZER Razer Blade 14)</b></li>
+                <ul>
+                    <li>8GB VRAM</li>
+                    <li>16GB RAM (3200MT/s)</li>
+                    <li>AMD Ryzen 9 5900HX</li>
+                </ul>
+                <br>
+                <li><b>3090 Ti</b></li>
+                <ul>
+                    <li>24GB VRAM</li>
+                    <li>64GB RAM (3600MHz)</li>
+                    <li>AMD Ryzen 9 5900X</li>
+                </ul>
+                <br>
+                <li><b>4070 Ti</b></li>
+                <ul>
+                    <li>12GB VRAM</li>
+                    <li>64GB RAM (4800MT/s)</li>
+                    <li>Intel i5-13600K</li>
+                </ul>
+            </ul>
+        </section>
+
+        <!-- Comparison section -->
+        <section class="card models-card">
+            <div class="card-title-row">
+                <h3 class="card-title"><i class="ph ph-images"></i> Visual & Performance Comparison</h3>
+                <div class="seed-selector">
+                    <span class="label">Seed</span>
+                    <button class="seed-btn" data-seed="4" aria-pressed="true">01</button>
+                    <button class="seed-btn" data-seed="5">02</button>
+                    <button class="seed-btn" data-seed="6">03</button>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <input id="search-input" class="input search" placeholder="Search models…">
+
+                <select id="quant-filter" class="input" style="display: none;">
+                    <option value="all">Quant: All</option>
+                    <option value="FP8">FP8</option>
+                    <option value="BF16">BF16</option>
+                    <option value="Q3">Q3</option>
+                    <option value="Q4">Q4</option>
+                    <option value="Q5">Q5</option>
+                </select>
+
+                <select id="diffusion-filter" class="input">
+                    <option value="all">Diffusion: All</option>
+                    <option value="AIO">AIO</option>
+                    <option value="ZIT Q3">ZIT Q3</option>
+                    <option value="ZIT Q4">ZIT Q4</option>
+                    <option value="ZIT Q5">ZIT Q5</option>
+                    <option value="Original BF16">Original BF16</option>
+                    <option value="FP8 Alternative">FP8 Alternative</option>
+                </select>
+
+                <select id="encoder-filter" class="input">
+                    <option value="all">Encoder: All</option>
+                    <option value="Internal">Internal</option>
+                    <option value="Qwen 3 4B">Qwen 3 4B</option>
+                    <option value="Qwen Q2">Qwen Q2</option>
+                    <option value="Qwen Q5">Qwen Q5</option>
+                </select>
+
+                <select id="vae-filter" class="input">
+                    <option value="all">VAE: All</option>
+                    <option value="Internal">Internal</option>
+                    <option value="Flux VAE">Flux VAE</option>
+                </select>
+
+                <select id="device-filter" class="input">
+                    <option value="all">Device: All</option>
+                    <option value="d4070Ti">4070 Ti — Desktop</option>
+                    <option value="d3090Ti">3090 Ti — Desktop</option>
+                    <option value="d3080Laptop">3080 Laptop — Mobile</option>
+                    <option value="dM4Pro">M4 Pro — Apple Silicon</option>
+                </select>
+
+                <input id="time-max" class="input" type="number" min="0" step="0.1" placeholder="Run 2 ≤ seconds">
+
+                <select id="sort-select" class="input">
+                    <option value="name-asc">Sort: Name A→Z</option>
+                    <option value="run2-asc">Sort: Run 2 ↑</option>
+                    <option value="run2-desc">Sort: Run 2 ↓</option>
+                    <option value="size-asc">Download size ↑</option>
+                    <option value="size-desc">Download size ↓</option>
+                </select>
+
+                <button id="reset-filters" class="btn btn-reset">
+                    <i class="ph ph-arrow-counter-clockwise"></i> Reset
+                </button>
+            </div>
+
+            <!-- Compare Bar -->
+            <div id="compare-bar" class="compare-bar hidden">
+                <button id="compare-open" class="btn compare-btn">
+                    <i class="ph ph-squares-four"></i>
+                    Compare (<span id="compare-count">0</span>)
+                </button>
+
+                <button id="compare-clear" class="btn btn-reset compare-btn">
+                    <i class="ph ph-trash"></i> Clear
+                </button>
+            </div>
+
+            <div id="models-count" class="models-count"></div>
+
+            <div id="models-grid" class="models-grid"></div>
+        </section>
+    </main>
+
+    <!-- Zoom modal -->
+    <div class="zoom-modal" id="zoom-modal">
+        <div class="zoom-backdrop"></div>
+        <div class="zoom-content">
+            <img id="zoom-img" src="">
+            <button class="zoom-close"><i class="ph ph-x"></i></button>
+        </div>
+    </div>
+
+    <!-- Compare Modal -->
+    <div id="compare-modal" class="compare-modal hidden">
+        <div class="compare-backdrop"></div>
+        <div class="compare-content">
+            <h3>Model Comparison</h3>
+
+            <table id="compare-table" class="compare-table"></table>
+
+            <button id="compare-close" class="btn btn-reset">
+                <i class="ph ph-x"></i> Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* ============================================================
+           STATIC WORKFLOW DATA (images, quant, downloads)
+           ============================================================ */
+
+        const WORKFLOWS = [
+            // ---------------------------------------------------------
+            // AIO FP8 (self-contained)
+            // ---------------------------------------------------------
+            {
+                name: "AIO FP8",
+                quant: "FP8",
+                refRun2: 7.66,
+                size: 10.30,
+                notes: "Self-contained AIO FP8 model (no separate VAE or Qwen needed).",
+                category: {
+                    diffusion: "AIO",
+                    encoder: "Internal",
+                    vae: "Internal"
+                },
+                images: [
+                    "assets/images/workflow/AIO FP8 01.png",
+                    "assets/images/workflow/AIO FP8 02.png",
+                    "assets/images/workflow/AIO FP8 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo FP8 AIO",
+                        size: "10.3 GB",
+                        link: "https://huggingface.co/SeeSee21/Z-Image-Turbo-AIO/blob/main/z-image-turbo-fp8-aio.safetensors",
+                        path: "StableDiffusion / Data\\Models\\StableDiffusion"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // BF16 Original + Qwen3 + Flux VAE
+            // ---------------------------------------------------------
+            {
+                name: "BF16 Qwen3 + VAE",
+                quant: "BF16",
+                refRun2: 9.14,
+                size: 20.68,
+                notes: "BF16 diffusion + Flux VAE + Qwen 3 4B text encoder.",
+                category: {
+                    diffusion: "Original BF16",
+                    encoder: "Qwen 3 4B",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/BF16 01.png",
+                    "assets/images/workflow/BF16 02.png",
+                    "assets/images/workflow/BF16 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo BF16",
+                        size: "12.3 GB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/diffusion_models/z_image_turbo_bf16.safetensors",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 3 4B",
+                        size: "8.04 GB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/text_encoders/qwen_3_4b.safetensors",
+                        path: "TextEncoders / Data\\Models\\TextEncoders"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // FP8 Alternative + Qwen3 + Flux VAE
+            // ---------------------------------------------------------
+            {
+                name: "FP8 Qwen3 + VAE",
+                quant: "FP8",
+                refRun2: 8.10,
+                size: 14.54,
+                notes: "FP8 diffusion + Flux VAE + Qwen 3 4B.",
+                category: {
+                    diffusion: "FP8 Alternative",
+                    encoder: "Qwen 3 4B",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/FP8 01.png",
+                    "assets/images/workflow/FP8 02.png",
+                    "assets/images/workflow/FP8 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo FP8 (Scaled)",
+                        size: "6.16 GB",
+                        link: "https://huggingface.co/Kijai/Z-Image_comfy_fp8_scaled/blob/main/z-image-turbo_fp8_scaled_e4m3fn_KJ.safetensors",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 3 4B",
+                        size: "8.04 GB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/text_encoders/qwen_3_4b.safetensors",
+                        path: "TextEncoders / Data\\Models\\TextEncoders"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // FP8 (GGUF) + Qwen Q5
+            // ---------------------------------------------------------
+            {
+                name: "FP8 GGUF + Qwen Q5",
+                quant: "Q5",
+                refRun2: 7.98,
+                size: 9.41,
+                notes: "FP8 diffusion model + Qwen 4B UD Q5_K_XL (GGUF).",
+                category: {
+                    diffusion: "FP8 Alternative",
+                    encoder: "Qwen Q5",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/FP8 GGUF QWEN Q5_K_XL 01.png",
+                    "assets/images/workflow/FP8 GGUF QWEN Q5_K_XL 02.png",
+                    "assets/images/workflow/FP8 GGUF QWEN Q5_K_XL 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo FP8 (Scaled)",
+                        size: "6.16 GB",
+                        link: "https://huggingface.co/Kijai/Z-Image_comfy_fp8_scaled/blob/main/z-image-turbo_fp8_scaled_e4m3fn_KJ.safetensors",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 4B UD Q5_K_XL",
+                        size: "2.91 GB",
+                        link: "https://huggingface.co/unsloth/Qwen3-4B-GGUF/blob/main/Qwen3-4B-UD-Q5_K_XL.gguf",
+                        path: "TextEncoders / Data\\Models\\TextEncoders"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // BF16 GGUF + Qwen Q5
+            // ---------------------------------------------------------
+            {
+                name: "BF16 GGUF + Qwen Q5",
+                quant: "Q5",
+                refRun2: 8.97,
+                size: 15.55,
+                notes: "BF16 diffusion + Flux VAE + Qwen 4B UD Q5_K_XL.",
+                category: {
+                    diffusion: "Original BF16",
+                    encoder: "Qwen Q5",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/BF16 GGUF QWEN Q5_K_XL 01.png",
+                    "assets/images/workflow/BF16 GGUF QWEN Q5_K_XL 02.png",
+                    "assets/images/workflow/BF16 GGUF QWEN Q5_K_XL 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo BF16",
+                        size: "12.3 GB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/diffusion_models/z_image_turbo_bf16.safetensors",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 4B UD Q5_K_XL",
+                        size: "2.91 GB",
+                        link: "https://huggingface.co/unsloth/Qwen3-4B-GGUF/blob/main/Qwen3-4B-UD-Q5_K_XL.gguf",
+                        path: "TextEncoders / Data\\Models\\TextEncoders"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // ZIT Q3 + Qwen Q2
+            // ---------------------------------------------------------
+            {
+                name: "ZIT Q3 + Qwen Q2",
+                quant: "Q3",
+                refRun2: 9.96,
+                size: 5.83,
+                notes: "Z-Image Turbo Q3_K_S + Qwen 4B UD Q2_K_XL (smallest total download).",
+                category: {
+                    diffusion: "ZIT Q3",
+                    encoder: "Qwen Q2",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/ZIT Q3_K_S + QWEN3_Q2_K_XL 01.png",
+                    "assets/images/workflow/ZIT Q3_K_S + QWEN3_Q2_K_XL 02.png",
+                    "assets/images/workflow/ZIT Q3_K_S + QWEN3_Q2_K_XL 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo Q3_K_S",
+                        size: "3.79 GB",
+                        link: "https://huggingface.co/jayn7/Z-Image-Turbo-GGUF/blob/main/z_image_turbo-Q3_K_S.gguf",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 4B UD Q2_K_XL",
+                        size: "1.7 GB",
+                        link: "https://huggingface.co/unsloth/Qwen3-4B-GGUF/blob/main/Qwen3-4B-UD-Q2_K_XL.gguf",
+                        path: "TextEncoders / Data\\Models\\TextEncoders"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // ZIT Q4 + Qwen Q2
+            // ---------------------------------------------------------
+            {
+                name: "ZIT Q4 + Qwen Q2",
+                quant: "Q4",
+                refRun2: 9.24,
+                size: 7.02,
+                notes: "Z-Image Turbo Q4_K_M + Qwen 4B UD Q2_K_XL.",
+                category: {
+                    diffusion: "ZIT Q4",
+                    encoder: "Qwen Q2",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/ZIT Q4_K_M + QWEN3_Q2_K_XL 01.png",
+                    "assets/images/workflow/ZIT Q4_K_M + QWEN3_Q2_K_XL 02.png",
+                    "assets/images/workflow/ZIT Q4_K_M + QWEN3_Q2_K_XL 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo Q4_K_M",
+                        size: "4.98 GB",
+                        link: "https://huggingface.co/jayn7/Z-Image-Turbo-GGUF/blob/main/z_image_turbo-Q4_K_M.gguf",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 4B UD Q2_K_XL",
+                        size: "1.7 GB",
+                        link: "https://huggingface.co/unsloth/Qwen3-4B-GGUF/blob/main/Qwen3-4B-UD-Q2_K_XL.gguf",
+                        path: "TextEncoders /  Data\\Models\\TextEncoders"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // ZIT Q5 + Qwen Q2
+            // ---------------------------------------------------------
+            {
+                name: "ZIT Q5 + Qwen Q2",
+                quant: "Q5",
+                refRun2: 9.67,
+                size: 7.55,
+                notes: "Z-Image Turbo Q5_K_M + Qwen 4B UD Q2_K_XL.",
+                category: {
+                    diffusion: "ZIT Q5",
+                    encoder: "Qwen Q2",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/ZIT Q5_K_M + QWEN3_Q2_K_XL 01.png",
+                    "assets/images/workflow/ZIT Q5_K_M + QWEN3_Q2_K_XL 02.png",
+                    "assets/images/workflow/ZIT Q5_K_M + QWEN3_Q2_K_XL 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo Q5_K_M",
+                        size: "5.52 GB",
+                        link: "https://huggingface.co/jayn7/Z-Image-Turbo-GGUF/blob/main/z_image_turbo-Q5_K_M.gguf",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 4B UD Q2_K_XL",
+                        size: "1.7 GB",
+                        link: "https://huggingface.co/unsloth/Qwen3-4B-GGUF/blob/main/Qwen3-4B-UD-Q2_K_XL.gguf",
+                        path: "TextEncoders / Data\\Models\\TextEncoders"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // ZIT Q3 + Qwen Q5
+            // ---------------------------------------------------------
+            {
+                name: "ZIT Q3 + Qwen Q5",
+                quant: "Q3",
+                refRun2: 10.22,
+                size: 7.04,
+                notes: "Z-Image Turbo Q3_K_S + Qwen 4B UD Q5_K_XL.",
+                category: {
+                    diffusion: "ZIT Q3",
+                    encoder: "Qwen Q5",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/ZIT Q3_K_S + QWEN3_Q5_K_XL 01.png",
+                    "assets/images/workflow/ZIT Q3_K_S + QWEN3_Q5_K_XL 02.png",
+                    "assets/images/workflow/ZIT Q3_K_S + QWEN3_Q5_K_XL 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo Q3_K_S",
+                        size: "3.79 GB",
+                        link: "https://huggingface.co/jayn7/Z-Image-Turbo-GGUF/blob/main/z_image_turbo-Q3_K_S.gguf",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 4B UD Q5_K_XL",
+                        size: "2.91 GB",
+                        link: "https://huggingface.co/unsloth/Qwen3-4B-GGUF/blob/main/Qwen3-4B-UD-Q5_K_XL.gguf",
+                        path: "TextEncoders / Data\\Models\\TextEncoders"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // ZIT Q4 + Qwen Q5
+            // ---------------------------------------------------------
+            {
+                name: "ZIT Q4 + Qwen Q5",
+                quant: "Q4",
+                refRun2: 9.17,
+                size: 8.23,
+                notes: "Z-Image Turbo Q4_K_M + Qwen 4B UD Q5_K_XL.",
+                category: {
+                    diffusion: "ZIT Q4",
+                    encoder: "Qwen Q5",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/ZIT Q4_K_M + QWEN3_Q5_K_XL 01.png",
+                    "assets/images/workflow/ZIT Q4_K_M + QWEN3_Q5_K_XL 02.png",
+                    "assets/images/workflow/ZIT Q4_K_M + QWEN3_Q5_K_XL 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo Q4_K_M",
+                        size: "4.98 GB",
+                        link: "https://huggingface.co/jayn7/Z-Image-Turbo-GGUF/blob/main/z_image_turbo-Q4_K_M.gguf",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 4B UD Q5_K_XL",
+                        size: "2.91 GB",
+                        link: "https://huggingface.co/unsloth/Qwen3-4B-GGUF/blob/main/Qwen3-4B-UD-Q5_K_XL.gguf",
+                        path: "TextEncoders / Data\\Models\\TextEncoders"
+                    }
+                ]
+            },
+
+            // ---------------------------------------------------------
+            // ZIT Q5 + Qwen Q5
+            // ---------------------------------------------------------
+            {
+                name: "ZIT Q5 + Qwen Q5",
+                quant: "Q5",
+                refRun2: 9.69,
+                size: 8.77,
+                notes: "Z-Image Turbo Q5_K_M + Qwen 4B UD Q5_K_XL.",
+                category: {
+                    diffusion: "ZIT Q5",
+                    encoder: "Qwen Q5",
+                    vae: "Flux VAE"
+                },
+                images: [
+                    "assets/images/workflow/ZIT Q5_K_M + QWEN3_Q5_K_XL 01.png",
+                    "assets/images/workflow/ZIT Q5_K_M + QWEN3_Q5_K_XL 02.png",
+                    "assets/images/workflow/ZIT Q5_K_M + QWEN3_Q5_K_XL 03.png"
+                ],
+                downloads: [
+                    {
+                        name: "Z-Image Turbo Q5_K_M",
+                        size: "5.52 GB",
+                        link: "https://huggingface.co/jayn7/Z-Image-Turbo-GGUF/blob/main/z_image_turbo-Q5_K_M.gguf",
+                        path: "DiffusionModels / Data\\Models\\DiffusionModels"
+                    },
+                    {
+                        name: "Flux VAE",
+                        size: "335 MB",
+                        link: "https://huggingface.co/Comfy-Org/z_image_turbo/blob/main/split_files/vae/ae.safetensors",
+                        path: "VAE / Data\\Models\\VAE"
+                    },
+                    {
+                        name: "Qwen 4B UD Q5_K_XL",
+                        size: "2.91 GB",
+                        link: "https://huggingface.co/unsloth/Qwen3-4B-GGUF/blob/main/Qwen3-4B-UD-Q5_K_XL.gguf",
+                        path: "TextEncoders / Data\\Models\\TextEncoders"
+                    }
+                ]
+            }
+        ];
+
+        const DEVICE_DEFS = {
+            d4070Ti: { short: "4070 Ti", label: "4070 Ti — Desktop GPU" },
+            d3090Ti: { short: "3090 Ti", label: "3090 Ti — Desktop GPU" },
+            d3080Laptop: { short: "3080 Laptop", label: "3080 Laptop — Mobile GPU" },
+            dM4Pro: { short: "M4 Pro", label: "M4 Pro — Apple Silicon" }
+        };
+
+        let BENCHMARKS = [];
+        let workflowBenchIndex = {};
+        let currentSeed = "4";
+        let currentDeviceFilter = "all";
+
+        const grid = document.getElementById("models-grid");
+
+        const searchInput = document.getElementById("search-input");
+        const quantFilter = document.getElementById("quant-filter");
+        const deviceFilter = document.getElementById("device-filter");
+        const timeMax = document.getElementById("time-max");
+        const sortSelect = document.getElementById("sort-select");
+        const resetBtn = document.getElementById("reset-filters");
+        const themeSelect = document.getElementById("theme-select");
+
+        const diffusionFilter = document.getElementById("diffusion-filter");
+        const encoderFilter = document.getElementById("encoder-filter");
+        const vaeFilter = document.getElementById("vae-filter");
+
+        const modal = document.getElementById("zoom-modal");
+        const zoomImg = document.getElementById("zoom-img");
+        const zoomBackdrop = modal.querySelector(".zoom-backdrop");
+        const zoomCloseBtn = modal.querySelector(".zoom-close");
+
+        function deviceIdFromName(name) {
+            name = name.toLowerCase();
+
+            if (name.includes("4070")) return "d4070Ti";
+            if (name.includes("3090")) return "d3090Ti";
+            if (name.includes("3080")) return "d3080Laptop";
+            if (name.includes("m4 pro")) return "dM4Pro";
+            return null;
+        }
+
+        function buildBenchIndex() {
+            workflowBenchIndex = {};
+            BENCHMARKS.forEach(b => {
+                const wf = b.workflow;
+                const entry = Object.assign({}, b, {
+                    deviceId: deviceIdFromName(b.device)
+                });
+                (workflowBenchIndex[wf] ||= []).push(entry);
+            });
+
+            // sort entries per workflow by device id for consistent display
+            Object.values(workflowBenchIndex).forEach(arr => {
+                arr.sort((a, b) => a.deviceId.localeCompare(b.deviceId));
+            });
+        }
+
+        function renderCards() {
+            grid.innerHTML = "";
+
+            WORKFLOWS.forEach(model => {
+                const card = document.createElement("article");
+                card.className = "model-card";
+                card.dataset.name = model.name;
+                card.dataset.quant = model.quant;
+                card.dataset.totalSize = model.size;
+                card.dataset.refRun2 = model.refRun2 || "";
+                card.dataset.diffusion = model.category.diffusion;
+                card.dataset.encoder = model.category.encoder;
+                card.dataset.vae = model.category.vae;
+
+                const imagesHtml = model.images.map((src, idx) => {
+                    const seed = idx === 0 ? "4" : idx === 1 ? "5" : "6";
+                    const active = seed === currentSeed ? "active" : "";
+                    return `<img src="${src}" data-seed="${seed}" class="model-img ${active}" loading="lazy">`;
+                }).join("");
+
+                const downloadsHtml = model.downloads.map(d => `
+          <li>
+            <a href="${d.link}" target="_blank" rel="noopener">${d.name}</a> · ${d.size}
+            <div class="downloads-path">→ ${d.path}</div>
+          </li>
+        `).join("");
+
+                card.innerHTML = `
+                <div class="compare-check-wrapper">
+  <label class="compare-check">
+    <input type="checkbox" class="compare-input" data-name="${model.name}">
+    Compare
+  </label>
+</div>
+
+          <div class="model-image-wrapper">
+            ${imagesHtml}
+          </div>
+
+          <div class="model-header">
+            <div class="model-name">${model.name}</div>
+            <div class="model-badges">
+              <span class="badge">${model.quant}</span>
+            </div>
+          </div>
+
+          <p class="model-note">${model.notes}</p>
+
+          <div class="device-block"></div>
+
+          <div class="downloads">
+            <div class="downloads-header">
+              <span>Downloads</span>
+              <span class="downloads-total">${model.size.toFixed ? model.size.toFixed(2) : model.size} GB</span>
+            </div>
+            <ul class="downloads-list">
+              ${downloadsHtml}
+            </ul>
+          </div>
+        `;
+
+                grid.appendChild(card);
+            });
+
+            updateDeviceBlocks();
+            updateCounts();
+        }
+
+        function formatRunLine(label, run) {
+            if (!run) return "";
+            const sIt = typeof run.s_per_it === "number" ? run.s_per_it.toFixed(2) : run.s_per_it;
+            const tot = run.total_seconds;
+            return `${label}: ${sIt} s/it (${tot}s total)`;
+        }
+
+        function renderInlineDevice(entry) {
+            const def = DEVICE_DEFS[entry.deviceId] || {};
+            return `
+        <div class="device-panel-inline">
+          <div class="device-panel-header">
+            <span class="device-chip">${def.label || entry.device}</span>
+          </div>
+          <div class="device-runs">
+            <div>${formatRunLine("Run 1", entry.run1)}</div>
+            <div>${formatRunLine("Run 2", entry.run2)}</div>
+          </div>
+        </div>
+      `;
+        }
+
+        function renderAllDevices(entries) {
+            const rows = entries.map(entry => {
+                const def = DEVICE_DEFS[entry.deviceId] || {};
+                return `
+          <div class="device-row">
+            <div class="device-row-header">
+              <span class="device-chip">${def.label || entry.device}</span>
+            </div>
+            <div class="device-runs">
+              <div>${formatRunLine("Run 1", entry.run1)}</div>
+              <div>${formatRunLine("Run 2", entry.run2)}</div>
+            </div>
+          </div>
+        `;
+            }).join("");
+
+            return `
+        <details class="device-panel">
+          <summary>
+            <span>Performance on all devices (${entries.length})</span>
+          </summary>
+          <div class="device-table">
+            ${rows}
+          </div>
+        </details>
+      `;
+        }
+
+        function updateDeviceBlocks() {
+            const cards = document.querySelectorAll(".model-card");
+
+            cards.forEach(card => {
+                const wfName = card.dataset.name;
+                const block = card.querySelector(".device-block");
+                const entries = workflowBenchIndex[wfName] || [];
+
+                if (!entries.length) {
+                    block.innerHTML = `<p class="device-none">No benchmarks yet.</p>`;
+                    return;
+                }
+
+                if (currentDeviceFilter === "all") {
+                    if (entries.length === 1) {
+                        block.innerHTML = renderInlineDevice(entries[0]);
+                    } else {
+                        block.innerHTML = renderAllDevices(entries);
+                    }
+                } else {
+                    const entry = entries.find(e => e.deviceId === currentDeviceFilter);
+                    if (!entry) {
+                        block.innerHTML = `<p class="device-none">No data for this device.</p>`;
+                    } else {
+                        block.innerHTML = renderInlineDevice(entry);
+                    }
+                }
+            });
+        }
+
+        function getRun2ForDevice(card) {
+            const wfName = card.dataset.name;
+            const ref = parseFloat(card.dataset.refRun2 || "0");
+
+            if (currentDeviceFilter === "all") return ref;
+
+            const entries = workflowBenchIndex[wfName] || [];
+            const entry = entries.find(e => e.deviceId === currentDeviceFilter);
+            return entry ? entry.run2.total_seconds : Infinity;
+        }
+
+        function applyFiltersAndSort() {
+            const searchTerm = (searchInput.value || "").toLowerCase().trim();
+
+            const quantSel = quantFilter.value;
+            const diffusionSel = diffusionFilter.value;
+            const encoderSel = encoderFilter.value;
+            const vaeSel = vaeFilter.value;
+
+            const tFilter = timeMax.value === "" ? null : parseFloat(timeMax.value);
+            const sortVal = sortSelect.value;
+
+            const cards = Array.from(document.querySelectorAll(".model-card"));
+            const visibleCards = [];
+
+            cards.forEach(card => {
+                const modelName = (card.dataset.name || "").toLowerCase();
+                const quant = card.dataset.quant;
+                const diffusion = card.dataset.diffusion;
+                const encoder = card.dataset.encoder;
+                const vae = card.dataset.vae;
+
+                const wfName = card.dataset.name;
+                const entries = workflowBenchIndex[wfName] || [];
+
+                let visible = true;
+
+                // SEARCH FILTER
+                if (searchTerm && !modelName.includes(searchTerm)) visible = false;
+
+                // CATEGORY FILTERS
+                if (visible && diffusionSel !== "all" && diffusion !== diffusionSel) visible = false;
+                if (visible && encoderSel !== "all" && encoder !== encoderSel) visible = false;
+                if (visible && vaeSel !== "all" && vae !== vaeSel) visible = false;
+
+                // QUANT FILTER
+                if (visible && quantSel !== "all" && quant !== quantSel) visible = false;
+
+                // DEVICE FILTER
+                if (visible && currentDeviceFilter !== "all") {
+                    const hasDevice = entries.some(e => e.deviceId === currentDeviceFilter);
+                    if (!hasDevice) visible = false;
+                }
+
+                // TIME FILTER (Run 2 seconds)
+                const run2time = getRun2ForDevice(card);
+                if (visible && tFilter != null && run2time > tFilter) visible = false;
+
+                card.style.display = visible ? "" : "none";
+                if (visible) visibleCards.push(card);
+            });
+
+            // SORT
+            visibleCards.sort((a, b) => {
+                const aName = a.dataset.name || "";
+                const bName = b.dataset.name || "";
+
+                const aRun = getRun2ForDevice(a);
+                const bRun = getRun2ForDevice(b);
+
+                const aSize = parseFloat(a.dataset.totalSize || "0");
+                const bSize = parseFloat(b.dataset.totalSize || "0");
+
+                switch (sortVal) {
+                    case "run2-asc": return aRun - bRun;
+                    case "run2-desc": return bRun - aRun;
+                    case "size-asc": return aSize - bSize;
+                    case "size-desc": return bSize - aSize;
+                    case "name-asc":
+                        return quantLevel(a.dataset.quant) - quantLevel(b.dataset.quant)
+                            || aName.localeCompare(bName);
+                    default:
+                        return 0;
+                }
+            });
+
+            // Append sorted
+            visibleCards.forEach(card => grid.appendChild(card));
+
+            updateCounts();
+            updateDeviceBlocks();
+        }
+
+        function quantLevel(q) {
+            if (q === "FP8") return 1;
+            if (q === "BF16") return 2;
+            if (q.startsWith("Q")) return 10 + parseInt(q.replace("Q", ""), 10);
+        }
+
+        function updateCounts() {
+            const total = WORKFLOWS.length;
+            const visible = [...document.querySelectorAll(".model-card")]
+                .filter(el => el.style.display !== "none").length;
+
+            document.getElementById("models-count").textContent =
+                `Showing ${visible} of ${total} workflows`;
+
+            document.getElementById("header-count").textContent =
+                `${visible} workflows · multi-device benchmarks`;
+        }
+
+        function resetFilters() {
+            searchInput.value = "";
+            quantFilter.value = "all";
+            deviceFilter.value = "all";
+            currentDeviceFilter = "all";
+            timeMax.value = "";
+            sortSelect.value = "name-asc";
+            applyFiltersAndSort();
+        }
+
+        function applyTheme(value) {
+            const root = document.documentElement;
+
+            if (value === "auto") {
+                root.removeAttribute("data-theme");
+                return;
+            }
+            if (value === "dark") {
+                root.setAttribute("data-theme", "dark");
+            } else {
+                root.removeAttribute("data-theme");
+            }
+        }
+
+        function openZoom(src) {
+            zoomImg.src = src;
+            modal.classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeZoom() {
+            modal.classList.remove("open");
+            document.body.style.overflow = "";
+            zoomImg.src = "";
+        }
+
+        function initEvents() {
+            // Theme
+            applyTheme(themeSelect.value);
+            themeSelect.addEventListener("change", () => {
+                applyTheme(themeSelect.value);
+            });
+
+            // Seed buttons
+            const seedButtons = document.querySelectorAll(".seed-btn");
+            seedButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const seed = btn.dataset.seed;
+                    currentSeed = seed;
+
+                    seedButtons.forEach(b =>
+                        b.setAttribute("aria-pressed", b === btn ? "true" : "false")
+                    );
+
+                    document.querySelectorAll(".model-card").forEach(card => {
+                        card.querySelectorAll(".model-img").forEach(img => {
+                            img.classList.toggle("active", img.dataset.seed === seed);
+                        });
+                    });
+                });
+            });
+
+            // Filters
+            searchInput.addEventListener("input", applyFiltersAndSort);
+            quantFilter.addEventListener("change", applyFiltersAndSort);
+            timeMax.addEventListener("input", applyFiltersAndSort);
+            sortSelect.addEventListener("change", applyFiltersAndSort);
+            resetBtn.addEventListener("click", resetFilters);
+            diffusionFilter.addEventListener("change", applyFiltersAndSort);
+            encoderFilter.addEventListener("change", applyFiltersAndSort);
+            vaeFilter.addEventListener("change", applyFiltersAndSort);
+
+            deviceFilter.addEventListener("change", () => {
+                currentDeviceFilter = deviceFilter.value;
+                applyFiltersAndSort();
+            });
+
+            // Zoom modal
+            grid.addEventListener("click", (e) => {
+                const img = e.target;
+                if (img.classList && img.classList.contains("model-img")) {
+                    openZoom(img.src);
+                }
+            });
+
+            zoomBackdrop.addEventListener("click", closeZoom);
+            zoomCloseBtn.addEventListener("click", closeZoom);
+            window.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && modal.classList.contains("open")) {
+                    closeZoom();
+                }
+            });
+        }
+
+        function init() {
+            fetch("assets/data/benchmarks.json")
+                .then(res => res.json())
+                .then(data => {
+                    BENCHMARKS = data.benchmarks || [];
+                    buildBenchIndex();
+                    renderCards();
+                    initEvents();
+                    applyFiltersAndSort();
+                })
+                .catch(err => {
+                    console.error("Failed to load benchmarks.json", err);
+                    BENCHMARKS = [];
+                    workflowBenchIndex = {};
+                    renderCards();
+                    initEvents();
+                    applyFiltersAndSort();
+                });
+        }
+
+        let COMPARE_SET = new Set();
+
+        // Checkbox listener
+        document.addEventListener("change", (e) => {
+            if (e.target.classList.contains("compare-input")) {
+                const name = e.target.dataset.name;
+                if (e.target.checked) COMPARE_SET.add(name);
+                else COMPARE_SET.delete(name);
+                updateCompareBar();
+            }
+        });
+
+        function updateCompareBar() {
+            const bar = document.getElementById("compare-bar");
+            const count = document.getElementById("compare-count");
+            count.textContent = COMPARE_SET.size;
+
+            if (COMPARE_SET.size > 1) bar.classList.remove("hidden");
+            else bar.classList.add("hidden");
+        }
+
+        document.getElementById("compare-open").addEventListener("click", openCompare);
+        document.getElementById("compare-clear").addEventListener("click", () => {
+            COMPARE_SET.clear();
+            document.querySelectorAll(".compare-input").forEach(cb => cb.checked = false);
+            updateCompareBar();
+        });
+        document.getElementById("compare-close").addEventListener("click", () => {
+            document.getElementById("compare-modal").classList.add("hidden");
+        });
+
+        const currentSeedMap = {
+            "4": "01",
+            "5": "02",
+            "6": "03"
+        };
+
+        function openCompare() {
+            const selected = [...COMPARE_SET];
+            if (!selected.length) return;
+
+            const table = document.getElementById("compare-table");
+
+            const rows = [];
+
+            // helpers
+            const wf = name => WORKFLOWS.find(w => w.name === name);
+
+            rows.push("<tr><th>Model</th>" +
+                selected.map(n => `<td>${n}</td>`).join("") + "</tr>");
+
+            rows.push(`
+<tr>
+  <th>Preview</th>
+  ${selected
+                    .map(n => {
+                        const wfObj = wf(n);
+                        const img = wfObj.images.find(src => src.includes(currentSeedMap[currentSeed]));
+                        return `<td><img src="${img}" class="compare-thumb"></td>`;
+                    })
+                    .join("")}
+</tr>
+`);
+
+            rows.push("<tr><th>Download Size</th>" +
+                selected.map(n => `<td>${wf(n).size.toFixed(2)} GB</td>`).join("") +
+                "</tr>");
+
+            rows.push("<tr><th>Quant</th>" +
+                selected.map(n => `<td>${wf(n).quant}</td>`).join("") + "</tr>");
+
+            rows.push(`
+<tr>
+  <th><i class="ph ph-cube"></i> Diffusion</th>
+  ${selected.map(n => `<td>${wf(n).category.diffusion}</td>`).join("")}
+</tr>
+`);
+
+            rows.push(`
+<tr>
+  <th><i class="ph ph-text-aa"></i> Encoder</th>
+  ${selected.map(n => `<td>${wf(n).category.encoder}</td>`).join("")}
+</tr>
+`);
+
+            rows.push(`
+<tr>
+  <th><i class="ph ph-shapes"></i> VAE</th>
+  ${selected.map(n => `<td>${wf(n).category.vae}</td>`).join("")}
+</tr>
+`);
+
+            // device-specific run2 times
+            const device = currentDeviceFilter;
+            if (device === "all") {
+                // Multi-device mode
+                rows.push(`
+        <tr>
+            <th>Run 2 (per device)</th>
+            ${selected.map(n => `<td></td>`).join("")}
+        </tr>
+    `);
+
+                Object.entries(DEVICE_DEFS).forEach(([devId, dev]) => {
+                    rows.push(`
+            <tr>
+                <th>Run 2 (${dev.short})</th>
+                ${selected.map(modelName => {
+                        const list = workflowBenchIndex[modelName] || [];
+                        const entry = list.find(e => e.deviceId === devId);
+                        return `<td>${entry ? entry.run2.total_seconds : "–"}</td>`;
+                    }).join("")}
+            </tr>
+        `);
+                });
+            } else {
+                // Single device mode
+                rows.push(`
+        <tr>
+            <th>Run 2 (${DEVICE_DEFS[device].short})</th>
+            ${selected.map(modelName => {
+                    const list = workflowBenchIndex[modelName] || [];
+                    const entry = list.find(e => e.deviceId === device);
+                    return `<td>${entry ? entry.run2.total_seconds : "–"}</td>`;
+                }).join("")}
+        </tr>
+    `);
+            }
+
+            table.innerHTML = rows.join("");
+
+            document.getElementById("compare-modal").classList.remove("hidden");
+        }
+
+        window.addEventListener("keydown", e => {
+            if (e.key === "Escape") {
+                document.getElementById("compare-modal").classList.add("hidden");
+            }
+        });
+
+        init();
+    </script>
+</body>
+
+</html>
