@@ -576,7 +576,7 @@
             }
         },
         {
-            "workflow": "ZIT Q4 + Qwen Q5",
+            "workflow": "ZIT Q5 + Qwen Q5",
             "original_workflow_label": "ZIT Q5_K_M + QWEN3_Q5_K_XL [3080 LAPTOP]",
             "device": "RTX 3080 Laptop",
             "run1": {
